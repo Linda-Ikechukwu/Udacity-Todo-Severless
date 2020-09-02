@@ -5,6 +5,7 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-reqvalidator-plugin
   - serverless-webpack
+  - serverless-aws-documentation
 
 package:
   individually: true
@@ -33,6 +34,18 @@ provider:
         - codedeploy:*
       Resource:
         - '*'
+
+custom:
+  documentation:
+    api:
+      info:
+        version: v1.0.0
+        title: Udacity-Todo-Severless
+        description: serverless todo app for the udacity cloud nanodegree
+    models:
+      - name: TodoRequest
+        contentType: application/json
+        schema: ${file(src/models/create-todo-request.json)}
 
 functions:
   Auth:
@@ -74,6 +87,11 @@ functions:
           method: post
           path: todos
           reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a new todo
+            description: Create a new todo
+            requestModels:
+              'application/json': TodoRequest
 
     iamRoleStatements:
       - Effect: Allow
@@ -96,6 +114,11 @@ functions:
           method: patch
           path: todos/{todoId}
           reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: update a todo
+            description: update a todo
+            requestModels:
+              'application/json': TodoRequest
 
     iamRoleStatements:
       - Effect: Allow

@@ -68,11 +68,14 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
 
   try {
     const response = await Axios.get(jwksUrl);
-    const cert = response.data;
+    const certID = response.data.keys[0].x5c[0]
+    const cert =
+    '-----BEGIN CERTIFICATE-----\n' + certID + '\n-----END CERTIFICATE-----'
+
     return verify(token, cert, { algorithms: ['RS256']}) as JwtPayload;
 
   } catch (err) {
-    throw new Error('something went wrong with token')
+    throw new Error('something went wrong with token');
   }
 
   
